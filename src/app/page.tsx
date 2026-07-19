@@ -1,100 +1,387 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { motion, useInView } from 'framer-motion';
+import {
+  MapPin,
+  ExternalLink,
+} from 'lucide-react';
+import Image from 'next/image';
+
+/* ────────────────────────────────────────────────────────────
+   Animated Counter Component
+   ──────────────────────────────────────────────────────────── */
+function AnimatedCounter({
+  value,
+  duration = 2000,
+  suffix = '',
+}: {
+  value: number;
+  duration?: number;
+  suffix?: string;
+}) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+
+  useEffect(() => {
+    if (!isInView) return;
+    let startTime: number;
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * value));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [isInView, value, duration]);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <span ref={ref}>
+      {count.toLocaleString('en-IN')}
+      {suffix}
+    </span>
+  );
+}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+/* ────────────────────────────────────────────────────────────
+   Landing Page
+   ──────────────────────────────────────────────────────────── */
+export default function HomePage() {
+  const [stats, setStats] = useState({
+    total_voices: 0,
+    cities_represented: 0,
+    states_represented: 0,
+  });
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const response = await fetch('/api/stats');
+        if (response.ok) {
+          const data = await response.json();
+          setStats(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+      }
+    }
+    fetchStats();
+  }, []);
+
+  const recentVoices: any[] = [];
+
+  return (
+    <div className="relative overflow-x-hidden bg-background">
+
+      {/* ── Cinematic Hero Section ── */}
+      <section className="relative h-screen min-h-[700px] w-full overflow-hidden flex flex-col justify-end -mt-24">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/protest_image.avif"
+            alt="Protest background"
+            fill
+            className="object-cover object-center opacity-80 grayscale"
+            priority
+          />
+          {/* Subtle gradient overlay to darken edges and make text readable */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/90" />
+          {/* Subtle tricolor tint overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-green-900/10 via-transparent to-orange-900/10 mix-blend-overlay" />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+        {/* Content Container */}
+        <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 lg:px-12 pb-24 md:pb-32 flex flex-col-reverse md:flex-row justify-between items-end gap-12">
+
+          {/* Left Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="shrink-0 flex flex-col sm:flex-row md:flex-col gap-4 w-full md:w-auto"
+          >
+            <Link
+              href="/submit"
+              className="inline-flex items-center justify-center bg-gradient-to-b from-[#FF9933] from-60% to-[#138808] text-white font-semibold tracking-[0.2em] uppercase px-10 py-5 transition-transform hover:scale-105 active:scale-95 shadow-2xl"
+            >
+              ADD YOUR VOICE NOW
+            </Link>
+
+            <a
+              href="#the-protest"
+              className="inline-flex items-center justify-center border border-white/50 bg-black/30 backdrop-blur-sm text-white font-semibold tracking-[0.2em] uppercase px-10 py-5 transition-all hover:bg-white hover:text-black"
+            >
+              LEARN THE DEMANDS
+            </a>
+          </motion.div>
+
+          {/* Right Text */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-left md:text-right w-full md:w-auto"
+          >
+            {/* Waving Flag */}
+            <div className="flex justify-start md:justify-end mb-6 md:pr-2">
+              <div className="relative w-32 h-24 sm:w-40 sm:h-28 md:w-80 md:h-80">
+                <Image src="/flag.png" alt="Indian Flag" fill className="object-contain drop-shadow-2xl" priority />
+              </div>
+            </div>
+
+            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] font-light uppercase leading-[1.1] tracking-tight text-white drop-shadow-2xl">
+              THE VOICES<br />
+              <span className="font-medium">ARE GROWING</span>
+            </h1>
+            <p className="mt-6 text-sm md:text-lg text-white/80 max-w-xl ml-0 md:ml-auto font-light tracking-wide leading-relaxed">
+              Join the CJP movement at Jantar Mantar demanding accountability for paper leaks and education reforms.
+            </p>
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* ── Stats Section ── */}
+      <section className="bg-background py-16 md:py-24 border-b border-border">
+        <div className="page-container">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left divide-y md:divide-y-0 md:divide-x divide-border">
+            {[
+              { label: 'Total Voices', value: stats.total_voices, suffix: '+' },
+              { label: 'Cities Represented', value: stats.cities_represented, suffix: '' },
+              { label: 'States Represented', value: stats.states_represented, suffix: '' },
+            ].map((stat, i) => (
+              <div key={i} className="pt-8 md:pt-0 md:pl-12 first:md:pl-0">
+                <div className="text-4xl md:text-5xl font-light text-foreground mb-4">
+                  <AnimatedCounter value={stat.value} duration={1500 + i * 300} suffix={stat.suffix} />
+                </div>
+                <div className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── The Protest Section ── */}
+      <section id="the-protest" className="page-container section-spacing scroll-mt-24">
+        <div className="mb-16">
+          <h2 className="text-4xl md:text-6xl font-light uppercase text-foreground leading-tight tracking-wide mb-2">
+            The Protest
+          </h2>
+          <p className="text-lg md:text-xl font-light text-muted-foreground tracking-wider">
+            Cockroach Janta Party (CJP) at Jantar Mantar
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Left Side: Content */}
+          <div className="space-y-12">
+            <div>
+              <p className="text-base md:text-lg font-light leading-relaxed text-foreground/90">
+                The Cockroach Janta Party (CJP), a youth-led movement, is holding an ongoing peaceful protest at Jantar Mantar, New Delhi, demanding accountability in India's education system.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold uppercase tracking-widest text-[#FF9933] mb-6">Why We Are Protesting</h3>
+              <ul className="space-y-4">
+                <li className="flex gap-4 items-start">
+                  <span className="text-[#FF9933] mt-1 font-bold">•</span>
+                  <span className="font-light text-foreground/80 leading-relaxed">Repeated paper leaks in major examinations including NEET-UG, CBSE, and other recruitment tests.</span>
+                </li>
+                <li className="flex gap-4 items-start">
+                  <span className="text-[#FF9933] mt-1 font-bold">•</span>
+                  <span className="font-light text-foreground/80 leading-relaxed">Lack of accountability for the future of lakhs of students whose careers have been devastated.</span>
+                </li>
+                <li className="flex gap-4 items-start">
+                  <span className="text-[#FF9933] mt-1 font-bold">•</span>
+                  <span className="font-light text-foreground/80 leading-relaxed">Tragic loss of lives due to stress and despair caused by these irregularities.</span>
+                </li>
+                <li className="flex gap-4 items-start">
+                  <span className="text-[#FF9933] mt-1 font-bold">•</span>
+                  <span className="font-light text-foreground/80 leading-relaxed">Demand for systemic reforms to restore trust in the examination process.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold uppercase tracking-widest text-[#138808] mb-6">Our Key Demands</h3>
+              <ul className="space-y-4">
+                <li className="flex gap-4 items-start">
+                  <span className="text-[#138808] mt-1 font-bold">•</span>
+                  <span className="font-light text-foreground/80 leading-relaxed">Immediate resignation of Union Education Minister Dharmendra Pradhan.</span>
+                </li>
+                <li className="flex gap-4 items-start">
+                  <span className="text-[#138808] mt-1 font-bold">•</span>
+                  <span className="font-light text-foreground/80 leading-relaxed">Strict action against those responsible for paper leaks and irregularities.</span>
+                </li>
+                <li className="flex gap-4 items-start">
+                  <span className="text-[#138808] mt-1 font-bold">•</span>
+                  <span className="font-light text-foreground/80 leading-relaxed">Fair re-examination and compensation for affected students.</span>
+                </li>
+                <li className="flex gap-4 items-start">
+                  <span className="text-[#138808] mt-1 font-bold">•</span>
+                  <span className="font-light text-foreground/80 leading-relaxed">Long-term structural reforms to prevent future leaks and ensure transparent examinations.</span>
+                </li>
+                <li className="flex gap-4 items-start">
+                  <span className="text-[#138808] mt-1 font-bold">•</span>
+                  <span className="font-light text-foreground/80 leading-relaxed">Justice for students and families impacted by the crisis.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold uppercase tracking-widest text-foreground mb-4">Current Status</h3>
+              <p className="text-sm md:text-base font-light leading-relaxed text-foreground/80 mb-6">
+                The protest began in June 2026 and continues as a sit-in at Jantar Mantar. Supporters, students, youth, and activists including climate activist Sonam Wangchuk have joined the movement. The protest has seen massive participation with people banging thalis (plates), wearing cockroach masks, and raising slogans for change.
+              </p>
+              <p className="text-lg italic font-medium text-white border-l-2 border-[#FF9933] pl-4">
+                "We believe that when the youth speak together, change becomes inevitable."
+              </p>
+            </div>
+
+            {/* Timeline */}
+            <div className="pt-6 border-t border-border">
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">Timeline</h3>
+              <div className="space-y-6">
+                <div className="relative pl-6 border-l border-border">
+                  <span className="absolute -left-[5px] top-1.5 h-2 w-2 rounded-full bg-[#FF9933]" />
+                  <p className="text-xs font-bold uppercase tracking-widest text-foreground mb-1">June 2026</p>
+                  <p className="text-sm font-light text-foreground/70">First major protest at Jantar Mantar</p>
+                </div>
+                <div className="relative pl-6 border-l border-[#138808]">
+                  <span className="absolute -left-[5px] top-1.5 h-2 w-2 rounded-full bg-[#138808]" />
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#138808] mb-1">Ongoing</p>
+                  <p className="text-sm font-light text-foreground/70">Continuous sit-in and growing support</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-8">
+              <p className="text-sm uppercase tracking-widest text-foreground mb-6">Stand with us.</p>
+              <Link
+                href="/submit"
+                className="inline-flex items-center justify-center bg-white text-black font-semibold tracking-[0.2em] uppercase px-8 py-4 transition-transform hover:scale-105 active:scale-95"
+              >
+                ADD YOUR VOICE NOW
+              </Link>
+            </div>
+
+          </div>
+
+          {/* Right Side: Photo Grid */}
+          <div className="grid grid-cols-2 gap-4 h-fit sticky top-32">
+            <div className="col-span-2 relative aspect-video group overflow-hidden border border-border">
+              <Image src="/protest_bg.png" alt="Protest crowd at Jantar Mantar" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+              <div className="absolute bottom-4 left-4 bg-black/80 px-3 py-1.5 text-xs uppercase tracking-widest backdrop-blur-md text-white">Crowd at Jantar Mantar</div>
+            </div>
+            <div className="relative aspect-square group overflow-hidden border border-border">
+              <Image src="/protest_bg.png" alt="Cockroach masks" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+              <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-widest backdrop-blur-md text-white">Masks</div>
+            </div>
+            <div className="relative aspect-square group overflow-hidden border border-border">
+              <Image src="/protest_bg.png" alt="Thali & spoon protest" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+              <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-widest backdrop-blur-md text-white">Thali Protest</div>
+            </div>
+            <div className="col-span-2 relative aspect-[21/9] group overflow-hidden border border-border">
+              <Image src="/protest_bg.png" alt="Dipke addressing the crowd" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+              <div className="absolute bottom-3 left-3 bg-black/80 px-3 py-1.5 text-xs uppercase tracking-widest backdrop-blur-md text-white">Addressing the Crowd</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Media Gallery ── */}
+      <section className="bg-surface py-24 border-y border-border">
+        <div className="page-container">
+          <div className="mb-16 text-center">
+            <h2 className="text-3xl md:text-5xl font-light uppercase text-foreground leading-tight tracking-wide mb-4">
+              Visual Evidence
+            </h2>
+            <p className="text-sm md:text-base font-light text-muted-foreground tracking-wider max-w-2xl mx-auto">
+              Images captured from the ongoing protest. A testament to the resilience of the youth.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+                viewport={{ once: true }}
+                className="relative aspect-square group overflow-hidden bg-background border border-border/50"
+              >
+                <Image
+                  src="/protest_bg.png"
+                  alt={`Protest image ${i + 1}`}
+                  fill
+                  className="object-cover grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
+                />
+                <div className="absolute inset-0 border border-white/10 group-hover:border-white/40 transition-colors pointer-events-none" />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Recent Voices Section ── */}
+      <section className="page-container section-spacing">
+        <div className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div>
+            <h2 className="text-3xl md:text-5xl font-light uppercase text-foreground leading-tight tracking-wide mb-4">
+              HEAR THE STREETS
+            </h2>
+            <p className="max-w-xl text-sm md:text-base font-light text-muted-foreground tracking-wider leading-relaxed">
+              Real submissions from across the nation. 100% anonymous.
+            </p>
+          </div>
+          <Link href="/voices" className="ghost-button">
+            READ ALL VOICES
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border border border-border">
+          {recentVoices.map((voice, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
+              viewport={{ once: true }}
+              className="p-10 flex flex-col justify-between h-full bg-surface hover:bg-surface/80 transition-colors"
+            >
+              <p className="mb-12 text-lg font-light text-foreground leading-relaxed">
+                &ldquo;{voice.message}&rdquo;
+              </p>
+              <div className="flex items-center gap-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.2em] mt-auto">
+                <MapPin className="h-3 w-3" />
+                <span>{voice.city}, {voice.state}</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="border-t border-border bg-surface">
+        <div className="page-container py-16 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            © {new Date().getFullYear()} PEOPLE'S VOICES. NO TRACKING.
+          </div>
+          <div className="flex items-center gap-8 text-[10px] font-semibold uppercase tracking-[0.2em] text-foreground">
+            <Link href="/privacy" className="hover:text-[#FF9933] transition-colors">Privacy Policy</Link>
+            <Link href="/methodology" className="hover:text-[#138808] transition-colors">Methodology</Link>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-accent transition-colors">
+              GitHub <ExternalLink className="h-3 w-3" />
+            </a>
+          </div>
+        </div>
       </footer>
     </div>
   );

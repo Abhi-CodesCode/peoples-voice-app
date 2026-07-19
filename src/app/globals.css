@@ -1,27 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* ── Cinematic Monochrome / Dark Aesthetic ── */
+    --background: #000000;
+    --foreground: #FFFFFF;
+    --surface: #0A0A0A;
+    --surface-foreground: #FFFFFF;
+
+    --card: #0A0A0A;
+    --card-foreground: #FFFFFF;
+    --popover: #0A0A0A;
+    --popover-foreground: #FFFFFF;
+
+    /* Subtle Indian Flag Accents */
+    --primary: #FFFFFF; /* High contrast white for most things */
+    --primary-foreground: #000000;
+
+    --secondary: #222222;
+    --secondary-foreground: #FFFFFF;
+
+    --muted: #1A1A1A;
+    --muted-foreground: #A1A1AA;
+
+    --accent: #FF9933; /* Saffron Accent */
+    --accent-foreground: #000000;
+
+    --success: #138808; /* Green Accent */
+    --success-foreground: #FFFFFF;
+
+    --destructive: #DC2626;
+    --destructive-foreground: #FFFFFF;
+
+    --border: #333333;
+    --input: #333333;
+    --ring: #FFFFFF;
+    --radius: 0px; /* Sharp corners for minimalist feel */
+  }
+
+  .dark {
+    /* Enforce dark mode globally since the cinematic look is inherently dark */
+    --background: #000000;
+    --foreground: #FFFFFF;
+    --surface: #0A0A0A;
+    --surface-foreground: #FFFFFF;
+    
+    --card: #0A0A0A;
+    --card-foreground: #FFFFFF;
+    --popover: #0A0A0A;
+    --popover-foreground: #FFFFFF;
+
+    --primary: #FFFFFF;
+    --primary-foreground: #000000;
+
+    --secondary: #222222;
+    --secondary-foreground: #FFFFFF;
+
+    --muted: #1A1A1A;
+    --muted-foreground: #A1A1AA;
+
+    --accent: #FF9933;
+    --accent-foreground: #000000;
+
+    --success: #138808;
+    --success-foreground: #FFFFFF;
+
+    --border: #333333;
+    --input: #333333;
+    --ring: #FFFFFF;
+  }
+
+  * {
+    border-color: var(--border);
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+  }
+
+  ::selection {
+    background-color: var(--foreground);
+    color: var(--background);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Minimalist Ghost Button */
+  .ghost-button {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 1px solid var(--foreground);
+    padding: 0.75rem 2rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ghost-button:hover {
+    background-color: var(--foreground);
+    color: var(--background);
+  }
+
+  /* Solid Button with Accent */
+  .solid-button {
+    background-color: var(--foreground);
+    color: var(--background);
+    padding: 0.75rem 2rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--foreground);
+  }
+
+  .solid-button:hover {
+    background-color: var(--accent); /* Hover into Saffron */
+    border-color: var(--accent);
+    color: var(--background);
+  }
+
+  .page-container {
+    @apply max-w-[1400px] mx-auto px-6 lg:px-12;
+  }
+
+  .section-spacing {
+    @apply py-24 md:py-32;
+  }
+
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #000000;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #333333;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #666666;
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* MapLibre overrides for dark aesthetic */
+.maplibregl-popup-content {
+  background: var(--surface) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+}
+.maplibregl-popup-tip {
+  display: none !important;
+}
+.maplibregl-ctrl-group {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+}
+.maplibregl-ctrl-group button {
+  background-color: transparent !important;
+  color: var(--foreground) !important;
+}
+.maplibregl-ctrl-group button:hover {
+  background-color: var(--muted) !important;
 }

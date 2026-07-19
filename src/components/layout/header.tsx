@@ -1,0 +1,150 @@
+'use client';
+
+import * as React from 'react';
+import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
+
+const LEFT_LINKS = [
+  { href: '/submit', label: 'ADD VOICE' },
+  { href: '/map', label: 'MAP' },
+  { href: '/voices', label: 'VOICES' },
+  { href: '/analytics', label: 'ANALYTICS' },
+] as const;
+
+export function Header() {
+  const [isScrolled, setIsScrolled] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  React.useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
+  return (
+    <>
+      <header
+        className={cn(
+          'fixed top-0 z-50 w-full transition-all duration-300',
+          isScrolled
+            ? 'bg-background/90 backdrop-blur-md border-b border-border/50 py-4'
+            : 'bg-transparent py-6'
+        )}
+      >
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-6 lg:px-12">
+          
+          {/* Left Navigation */}
+          <nav className="hidden md:flex items-center gap-8 flex-1">
+            {LEFT_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "text-[11px] font-semibold tracking-[0.2em] uppercase transition-all",
+                  link.href === '/submit'
+                    ? "text-[#FF9933] hover:text-[#138808] border border-[#FF9933]/30 px-3 py-1.5 hover:border-[#138808]/50"
+                    : "text-foreground/80 hover:text-foreground"
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Center Logo/Title */}
+          <Link href="/" className="flex-shrink-0 group">
+            <span className="text-sm md:text-lg font-light tracking-[0.25em] uppercase text-foreground text-center flex items-center justify-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#FF9933] opacity-0 group-hover:opacity-100 transition-opacity" />
+              PEOPLE'S VOICES
+              <span className="h-1.5 w-1.5 rounded-full bg-[#138808] opacity-0 group-hover:opacity-100 transition-opacity" />
+            </span>
+          </Link>
+
+          {/* Right Section (Icons/Text) */}
+          <div className="hidden md:flex items-center gap-6 flex-1 justify-end text-[11px] font-semibold tracking-[0.2em]">
+            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-foreground/80 hover:text-foreground transition-colors">
+              TW
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-foreground/80 hover:text-foreground transition-colors">
+              IG
+            </a>
+            <a href="https://github.com" target="_blank" rel="noreferrer" className="text-foreground/80 hover:text-foreground transition-colors">
+              GH
+            </a>
+            <div className="w-px h-4 bg-border mx-2" />
+            <ThemeToggle />
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="inline-flex md:hidden h-10 w-10 items-center justify-end text-foreground focus-visible:outline-none"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          >
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-md md:hidden flex flex-col justify-center items-center"
+          >
+            <div className="flex flex-col items-center gap-8">
+              {LEFT_LINKS.map((link, index) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * index }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-2xl font-light tracking-[0.2em] uppercase text-foreground hover:text-accent transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+              
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="mt-8 flex gap-6 text-[11px] font-semibold tracking-[0.2em]"
+              >
+                <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-foreground/50 hover:text-foreground transition-colors">TW</a>
+                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-foreground/50 hover:text-foreground transition-colors">IG</a>
+                <a href="https://github.com" target="_blank" rel="noreferrer" className="text-foreground/50 hover:text-foreground transition-colors">GH</a>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
