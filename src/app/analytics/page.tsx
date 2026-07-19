@@ -58,7 +58,7 @@ export default function AnalyticsPage() {
   }, []);
 
   // Empty arrays since dummy data is removed
-  const timeData: any[] = [];
+  const timeData: Record<string, unknown>[] = [];
   
   // Alignment distribution
   const alignmentData = [
@@ -68,11 +68,11 @@ export default function AnalyticsPage() {
   ].filter(d => d.value > 0);
 
   // Attendance breakdown (requires actual API data for true values, zeroing for now)
-  const attendanceData: any[] = [];
-  const cityData: any[] = [];
-  const stateData: any[] = [];
-  const ageData: any[] = [];
-  const occupationData: any[] = [];
+  const attendanceData: Record<string, unknown>[] = [];
+  const cityData: Record<string, unknown>[] = [];
+  const stateData: Record<string, unknown>[] = [];
+  const ageData: Record<string, unknown>[] = [];
+  const occupationData: Record<string, unknown>[] = [];
 
   const supportingPct = stats.total_voices > 0 ? (stats.supporting_count / stats.total_voices) * 100 : 0;
   const participatingPct = stats.total_voices > 0 ? (stats.participating_count / stats.total_voices) * 100 : 0;

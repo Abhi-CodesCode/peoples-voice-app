@@ -51,7 +51,7 @@ export async function GET(request: Request) {
     // Filter unique, not in predefined, and valid strings
     const uniqueSuggestions = new Set<string>();
     for (const row of data || []) {
-      const val = (row as any)[field];
+      const val = (row as Record<string, unknown>)[field];
       if (val && typeof val === 'string' && val.trim().length > 0) {
         if (!PREDEFINED_OPTIONS.includes(val)) {
           uniqueSuggestions.add(val);
