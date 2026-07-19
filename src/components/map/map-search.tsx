@@ -80,7 +80,7 @@ export function MapSearch({ onLocationSelect }: MapSearchProps) {
             setIsOpen(true);
           }}
           placeholder="Search city to navigate map..."
-          className="pl-10 pr-10 bg-surface/90 border border-primary/20 backdrop-blur-md text-foreground rounded-xl placeholder:text-muted-foreground shadow-lg"
+          className="pl-10 pr-10 bg-black/90 border border-white/20 backdrop-blur-md text-white rounded-xl placeholder:text-white/60 shadow-lg"
         />
         {query && (
           <button

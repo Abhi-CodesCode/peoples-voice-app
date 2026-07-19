@@ -17,13 +17,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Textarea } from '@/components/ui/textarea';
+
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 import { CitySearch } from './city-search';
 import { PrivacyConfirmation } from './privacy-confirmation';
+import { AutocompleteOtherField } from './autocomplete-other-field';
 import { SubmissionFormData, CitySearchResult, ParticipationStatus, AttendanceType, AgeGroup } from '@/types/database';
 import { MAX_REASON_LENGTH, MAX_OUTCOME_LENGTH, MAX_OCCUPATION_LENGTH } from '@/lib/constants';
 
@@ -35,6 +36,20 @@ const STEPS = [
   { id: 5, name: 'Desired Outcome' },
   { id: 6, name: 'Details' },
   { id: 7, name: 'Confirm' }
+];
+
+const SUPPORT_REASON_OPTIONS = [
+  "To demand accountability for repeated exam paper leaks (NEET, etc.) and justice for affected students.",
+  "Because students' futures and lives are being ruined by systemic failures in the education system.",
+  "To support the call for Education Minister Dharmendra Pradhan's resignation and better governance.",
+  "As a concerned citizen/parent/youth who wants transparent and fair examinations in India."
+];
+
+const DESIRED_OUTCOME_OPTIONS = [
+  "Resignation of the Education Minister and strict action against those responsible for leaks.",
+  "Complete cancellation/re-examination of compromised tests + compensation for affected students/families.",
+  "Long-term reforms: stronger security for exams, independent oversight, and prevention of future leaks.",
+  "Nationwide awareness and pressure for systemic change in recruitment and education policies."
 ];
 
 export function SubmissionWizard() {
@@ -59,6 +74,8 @@ export function SubmissionWizard() {
   });
 
   const [selectedCityResult, setSelectedCityResult] = useState<CitySearchResult | null>(null);
+  const [isOtherSupportReason, setIsOtherSupportReason] = useState(false);
+  const [isOtherDesiredOutcome, setIsOtherDesiredOutcome] = useState(false);
 
   const handleCitySelect = (cityResult: CitySearchResult) => {
     setSelectedCityResult(cityResult);
@@ -288,19 +305,61 @@ export function SubmissionWizard() {
                   <div className="space-y-1">
                     <h2 className="text-lg font-bold text-foreground">Why are you supporting?</h2>
                     <p className="text-sm text-muted-foreground">
-                      Briefly share your perspective. Explain the core reasons for your alignment. (Max 300 characters)
+                      Select your primary reason or write your own.
                     </p>
                   </div>
-                  <div className="pt-2">
-                    <Textarea
-                      value={formData.support_reason || ''}
-                      onChange={(e) => handleTextChange('support_reason', e.target.value.slice(0, MAX_REASON_LENGTH))}
-                      placeholder="Share your concerns, perspectives, or personal reasons..."
-                      className="min-h-[120px] resize-none"
-                    />
-                    <div className="flex justify-end text-xs text-muted-foreground mt-1">
-                      {formData.support_reason?.length || 0} / {MAX_REASON_LENGTH} characters
-                    </div>
+                  <div className="pt-2 space-y-3">
+                    {SUPPORT_REASON_OPTIONS.map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => {
+                          setIsOtherSupportReason(false);
+                          handleTextChange('support_reason', opt);
+                        }}
+                        className={`w-full p-4 rounded-xl border text-left transition-all hover:bg-primary/5 flex items-start gap-3 ${
+                          !isOtherSupportReason && formData.support_reason === opt
+                            ? 'border-primary bg-primary/10 ring-1 ring-primary'
+                            : 'border-border bg-surface/30'
+                        }`}
+                      >
+                        <div className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${!isOtherSupportReason && formData.support_reason === opt ? 'border-primary' : 'border-muted-foreground'}`}>
+                          {!isOtherSupportReason && formData.support_reason === opt && <div className="h-2 w-2 rounded-full bg-primary" />}
+                        </div>
+                        <span className="text-sm text-foreground leading-relaxed">{opt}</span>
+                      </button>
+                    ))}
+                    
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsOtherSupportReason(true);
+                        if (SUPPORT_REASON_OPTIONS.includes(formData.support_reason || '')) {
+                          handleTextChange('support_reason', '');
+                        }
+                      }}
+                      className={`w-full p-4 rounded-xl border text-left transition-all hover:bg-primary/5 flex items-start gap-3 ${
+                        isOtherSupportReason
+                          ? 'border-primary bg-primary/10 ring-1 ring-primary'
+                          : 'border-border bg-surface/30'
+                      }`}
+                    >
+                      <div className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${isOtherSupportReason ? 'border-primary' : 'border-muted-foreground'}`}>
+                        {isOtherSupportReason && <div className="h-2 w-2 rounded-full bg-primary" />}
+                      </div>
+                      <span className="text-sm text-foreground">Other (free text)</span>
+                    </button>
+
+                    {isOtherSupportReason && (
+                      <div className="mt-3 pl-7">
+                        <AutocompleteOtherField
+                          field="support_reason"
+                          value={isOtherSupportReason ? (formData.support_reason || '') : ''}
+                          onChange={(val) => handleTextChange('support_reason', val)}
+                          maxLength={MAX_REASON_LENGTH}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -311,19 +370,61 @@ export function SubmissionWizard() {
                   <div className="space-y-1">
                     <h2 className="text-lg font-bold text-foreground">What outcome would you like to see?</h2>
                     <p className="text-sm text-muted-foreground">
-                      What is the resolution or specific change you want to achieve through this protest? (Max 300 characters)
+                      What is the resolution or specific change you want to achieve?
                     </p>
                   </div>
-                  <div className="pt-2">
-                    <Textarea
-                      value={formData.desired_outcome || ''}
-                      onChange={(e) => handleTextChange('desired_outcome', e.target.value.slice(0, MAX_OUTCOME_LENGTH))}
-                      placeholder="What reforms or specific answers would satisfy you?..."
-                      className="min-h-[120px] resize-none"
-                    />
-                    <div className="flex justify-end text-xs text-muted-foreground mt-1">
-                      {formData.desired_outcome?.length || 0} / {MAX_OUTCOME_LENGTH} characters
-                    </div>
+                  <div className="pt-2 space-y-3">
+                    {DESIRED_OUTCOME_OPTIONS.map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => {
+                          setIsOtherDesiredOutcome(false);
+                          handleTextChange('desired_outcome', opt);
+                        }}
+                        className={`w-full p-4 rounded-xl border text-left transition-all hover:bg-primary/5 flex items-start gap-3 ${
+                          !isOtherDesiredOutcome && formData.desired_outcome === opt
+                            ? 'border-primary bg-primary/10 ring-1 ring-primary'
+                            : 'border-border bg-surface/30'
+                        }`}
+                      >
+                        <div className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${!isOtherDesiredOutcome && formData.desired_outcome === opt ? 'border-primary' : 'border-muted-foreground'}`}>
+                          {!isOtherDesiredOutcome && formData.desired_outcome === opt && <div className="h-2 w-2 rounded-full bg-primary" />}
+                        </div>
+                        <span className="text-sm text-foreground leading-relaxed">{opt}</span>
+                      </button>
+                    ))}
+                    
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsOtherDesiredOutcome(true);
+                        if (DESIRED_OUTCOME_OPTIONS.includes(formData.desired_outcome || '')) {
+                          handleTextChange('desired_outcome', '');
+                        }
+                      }}
+                      className={`w-full p-4 rounded-xl border text-left transition-all hover:bg-primary/5 flex items-start gap-3 ${
+                        isOtherDesiredOutcome
+                          ? 'border-primary bg-primary/10 ring-1 ring-primary'
+                          : 'border-border bg-surface/30'
+                      }`}
+                    >
+                      <div className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border flex items-center justify-center ${isOtherDesiredOutcome ? 'border-primary' : 'border-muted-foreground'}`}>
+                        {isOtherDesiredOutcome && <div className="h-2 w-2 rounded-full bg-primary" />}
+                      </div>
+                      <span className="text-sm text-foreground">Other (free text)</span>
+                    </button>
+
+                    {isOtherDesiredOutcome && (
+                      <div className="mt-3 pl-7">
+                        <AutocompleteOtherField
+                          field="desired_outcome"
+                          value={isOtherDesiredOutcome ? (formData.desired_outcome || '') : ''}
+                          onChange={(val) => handleTextChange('desired_outcome', val)}
+                          maxLength={MAX_OUTCOME_LENGTH}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

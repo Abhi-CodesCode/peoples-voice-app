@@ -71,7 +71,7 @@ export default function HomePage() {
     fetchStats();
   }, []);
 
-  const recentVoices: any[] = [];
+  const recentVoices: { message: string; city: string; state: string }[] = [];
 
   return (
     <div className="relative overflow-x-hidden bg-background">
@@ -105,7 +105,7 @@ export default function HomePage() {
           >
             <Link
               href="/submit"
-              className="inline-flex items-center justify-center bg-gradient-to-b from-[#FF9933] from-60% to-[#138808] text-white font-semibold tracking-[0.2em] uppercase px-10 py-5 transition-transform hover:scale-105 active:scale-95 shadow-2xl"
+              className="inline-flex items-center justify-center bg-gradient-to-b from-[#FF9933] to-[#138808] text-white font-semibold tracking-[0.2em] uppercase px-10 py-5 transition-transform hover:scale-105 active:scale-95 shadow-2xl"
             >
               ADD YOUR VOICE NOW
             </Link>
@@ -128,7 +128,17 @@ export default function HomePage() {
             {/* Waving Flag */}
             <div className="flex justify-start md:justify-end mb-6 md:pr-2">
               <div className="relative w-32 h-24 sm:w-40 sm:h-28 md:w-80 md:h-80">
-                <Image src="/flag.png" alt="Indian Flag" fill className="object-contain drop-shadow-2xl" priority />
+                <Image 
+                  src="/rebellion_flag.png" 
+                  alt="Rebellion Flag" 
+                  fill 
+                  className="object-contain drop-shadow-2xl" 
+                  style={{ 
+                    maskImage: 'radial-gradient(circle, black 40%, transparent 75%)', 
+                    WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 75%)' 
+                  }}
+                  priority 
+                />
               </div>
             </div>
 
@@ -182,7 +192,7 @@ export default function HomePage() {
           <div className="space-y-12">
             <div>
               <p className="text-base md:text-lg font-light leading-relaxed text-foreground/90">
-                The Cockroach Janta Party (CJP), a youth-led movement, is holding an ongoing peaceful protest at Jantar Mantar, New Delhi, demanding accountability in India's education system.
+                The Cockroach Janta Party (CJP), a youth-led movement, is holding an ongoing peaceful protest at Jantar Mantar, New Delhi, demanding accountability in India&apos;s education system.
               </p>
             </div>
 
@@ -240,7 +250,7 @@ export default function HomePage() {
                 The protest began in June 2026 and continues as a sit-in at Jantar Mantar. Supporters, students, youth, and activists including climate activist Sonam Wangchuk have joined the movement. The protest has seen massive participation with people banging thalis (plates), wearing cockroach masks, and raising slogans for change.
               </p>
               <p className="text-lg italic font-medium text-white border-l-2 border-[#FF9933] pl-4">
-                "We believe that when the youth speak together, change becomes inevitable."
+                &quot;We believe that when the youth speak together, change becomes inevitable.&quot;
               </p>
             </div>
 
@@ -276,19 +286,19 @@ export default function HomePage() {
           {/* Right Side: Photo Grid */}
           <div className="grid grid-cols-2 gap-4 h-fit sticky top-32">
             <div className="col-span-2 relative aspect-video group overflow-hidden border border-border">
-              <Image src="/protest_bg.png" alt="Protest crowd at Jantar Mantar" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+              <Image src="/images/collage1.png" alt="Protest crowd at Jantar Mantar" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
               <div className="absolute bottom-4 left-4 bg-black/80 px-3 py-1.5 text-xs uppercase tracking-widest backdrop-blur-md text-white">Crowd at Jantar Mantar</div>
             </div>
             <div className="relative aspect-square group overflow-hidden border border-border">
-              <Image src="/protest_bg.png" alt="Cockroach masks" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+              <Image src="/images/mask.avif" alt="Cockroach masks" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
               <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-widest backdrop-blur-md text-white">Masks</div>
             </div>
             <div className="relative aspect-square group overflow-hidden border border-border">
-              <Image src="/protest_bg.png" alt="Thali & spoon protest" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+              <Image src="/images/cjp1.jpg" alt="Thali & spoon protest" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
               <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-widest backdrop-blur-md text-white">Thali Protest</div>
             </div>
             <div className="col-span-2 relative aspect-[21/9] group overflow-hidden border border-border">
-              <Image src="/protest_bg.png" alt="Dipke addressing the crowd" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+              <Image src="/images/cjp9.avif" alt="Dipke addressing the crowd" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
               <div className="absolute bottom-3 left-3 bg-black/80 px-3 py-1.5 text-xs uppercase tracking-widest backdrop-blur-md text-white">Addressing the Crowd</div>
             </div>
           </div>
@@ -308,7 +318,17 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-            {Array.from({ length: 9 }).map((_, i) => (
+            {[
+              "/images/cjp1.jpg",
+              "/images/cjp2.jpg",
+              "/images/cjp3.jpg",
+              "/images/cjp5.jpg",
+              "/images/cjp6.jpg",
+              "/images/cjp9.avif",
+              "/images/collage1.png",
+              "/images/mask.avif",
+              "/protest_bg.png"
+            ].map((src, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -318,7 +338,7 @@ export default function HomePage() {
                 className="relative aspect-square group overflow-hidden bg-background border border-border/50"
               >
                 <Image
-                  src="/protest_bg.png"
+                  src={src}
                   alt={`Protest image ${i + 1}`}
                   fill
                   className="object-cover grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
@@ -372,7 +392,7 @@ export default function HomePage() {
       <footer className="border-t border-border bg-surface">
         <div className="page-container py-16 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            © {new Date().getFullYear()} PEOPLE'S VOICES. NO TRACKING.
+            © {new Date().getFullYear()} PEOPLE&apos;S VOICES. NO TRACKING.
           </div>
           <div className="flex items-center gap-8 text-[10px] font-semibold uppercase tracking-[0.2em] text-foreground">
             <Link href="/privacy" className="hover:text-[#FF9933] transition-colors">Privacy Policy</Link>

@@ -51,7 +51,7 @@ export default function MapPage() {
   };
 
   return (
-    <div className="relative flex h-[calc(100vh-64px)] w-full overflow-hidden">
+    <div className="relative flex h-screen w-full overflow-hidden -mt-24">
       {/* Heatmap Area */}
       <div className="flex-1 h-full w-full relative">
         <Heatmap onCityClick={handleCityClick} />

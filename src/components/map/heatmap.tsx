@@ -206,7 +206,7 @@ export default function Heatmap({ onCityClick, flyToCoords }: HeatmapProps) {
   return (
     <div className="relative w-full h-full">
       {/* Search Input Overlay */}
-      <div className="absolute top-4 left-4 z-10 w-full pr-8 sm:pr-0">
+      <div className="absolute top-28 left-4 z-10 w-full pr-8 sm:pr-0">
         <MapSearch onLocationSelect={handleLocationSelect} />
       </div>
 
