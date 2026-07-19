@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import citiesData from '@/data/indian-cities.json';
 import { CitySearchResult } from '@/types/database';
 

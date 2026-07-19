@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import { createServiceRoleClient } from '@/lib/supabase/server';
 
 export const revalidate = 60; // Cache map data for 60 seconds
