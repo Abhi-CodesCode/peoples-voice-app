@@ -96,13 +96,13 @@ export function Header() {
 
           {/* Right Section (Icons/Text) */}
           <div className="hidden md:flex items-center gap-6 flex-1 justify-end text-[11px] font-semibold tracking-[0.2em]">
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-foreground/80 hover:text-foreground transition-colors" aria-label="Twitter">
+            <a href="https://x.com/CJP_for_India?lang=en" target="_blank" rel="noreferrer" className="text-foreground/80 hover:text-foreground transition-colors" aria-label="Twitter">
               <TwitterIcon className="h-4 w-4" />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-foreground/80 hover:text-foreground transition-colors" aria-label="Instagram">
+            <a href="https://www.instagram.com/cockroachjantaparty/?hl=en" target="_blank" rel="noreferrer" className="text-foreground/80 hover:text-foreground transition-colors" aria-label="Instagram">
               <InstagramIcon className="h-4 w-4" />
             </a>
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="text-foreground/80 hover:text-foreground transition-colors" aria-label="GitHub">
+            <a href="https://github.com/Abhi-CodesCode/peoples-voice-app" target="_blank" rel="noreferrer" className="text-foreground/80 hover:text-foreground transition-colors" aria-label="GitHub">
               <GithubIcon className="h-4 w-4" />
             </a>
           </div>
@@ -152,9 +152,9 @@ export function Header() {
                 transition={{ delay: 0.5 }}
                 className="mt-8 flex gap-6 text-[11px] font-semibold tracking-[0.2em]"
               >
-                <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-foreground/50 hover:text-foreground transition-colors">TW</a>
-                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-foreground/50 hover:text-foreground transition-colors">IG</a>
-                <a href="https://github.com" target="_blank" rel="noreferrer" className="text-foreground/50 hover:text-foreground transition-colors">GH</a>
+                <a href="https://x.com/CJP_for_India?lang=en" target="_blank" rel="noreferrer" className="text-foreground/50 hover:text-foreground transition-colors">TW</a>
+                <a href="https://www.instagram.com/cockroachjantaparty/?hl=en" target="_blank" rel="noreferrer" className="text-foreground/50 hover:text-foreground transition-colors">IG</a>
+                <a href="https://github.com/Abhi-CodesCode/peoples-voice-app" target="_blank" rel="noreferrer" className="text-foreground/50 hover:text-foreground transition-colors">GH</a>
               </motion.div>
             </div>
           </motion.div>

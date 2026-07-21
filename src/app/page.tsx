@@ -294,8 +294,8 @@ export default function HomePage() {
               <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-widest backdrop-blur-md text-white">Masks</div>
             </div>
             <div className="relative aspect-square group overflow-hidden border border-border">
-              <Image src="/images/cjp1.jpg" alt="Thali & spoon protest" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
-              <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-widest backdrop-blur-md text-white">Thali Protest</div>
+              <Image src="/images/cjp1.jpg" alt="Sonam Wangchuk" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
+              <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-widest backdrop-blur-md text-white">Sonam Wangchuk</div>
             </div>
             <div className="col-span-2 relative aspect-[21/9] group overflow-hidden border border-border">
               <Image src="/images/cjp9.avif" alt="Dipke addressing the crowd" fill className="object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" />
