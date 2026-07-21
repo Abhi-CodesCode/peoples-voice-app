@@ -275,7 +275,8 @@ export function SubmissionWizard() {
                   <div className="grid grid-cols-1 gap-3 pt-2">
                     {[
                       { value: 'already_attended', label: 'Already Attended', desc: 'Have visited demonstration venues or participated in local hubs.' },
-                      { value: 'planning_to_attend', label: 'Planning to Attend', desc: 'Intend to participate physically in upcoming gatherings.' },
+                      { value: 'planning_to_attend', label: 'Planning to Attend', desc: 'Intend to join the protests physically soon.' },
+                      { value: 'local_protest', label: 'Will Join Protest in Own City', desc: 'Cannot travel far, but will participate locally.' },
                       { value: 'supporting_online', label: 'Supporting Online Only', desc: 'Help spread awareness online and support remotely.' }
                     ].map((opt) => (
                       <button

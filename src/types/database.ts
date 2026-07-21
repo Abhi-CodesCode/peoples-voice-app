@@ -6,7 +6,8 @@ export type ParticipationStatus = 'supporting' | 'participating' | 'undecided';
 export type AttendanceType =
   | 'already_attended'
   | 'planning_to_attend'
-  | 'supporting_online';
+  | 'supporting_online'
+  | 'local_protest';
 
 export type AgeGroup =
   | '18-24'
@@ -52,6 +53,7 @@ export interface CityAggregate {
   already_attended_count: number;
   planning_count: number;
   online_count: number;
+  local_protest_count: number;
 }
 
 /** Aggregated voice counts per state */

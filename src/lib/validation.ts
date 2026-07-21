@@ -21,6 +21,7 @@ const VALID_ATTENDANCE: AttendanceType[] = [
   'already_attended',
   'planning_to_attend',
   'supporting_online',
+  'local_protest',
 ];
 
 const VALID_AGE_GROUPS: AgeGroup[] = [

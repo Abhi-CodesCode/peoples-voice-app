@@ -1,4 +1,4 @@
-import type { ParticipationStatus, AttendanceType, AgeGroup } from '@/types/database';
+import type { ParticipationStatus, AgeGroup } from '@/types/database';
 
 // ── Site Metadata ──────────────────────────────────────────────────────
 export const SITE_NAME = "People's Voices";
@@ -34,10 +34,11 @@ export const PARTICIPATION_LABELS: Record<ParticipationStatus, string> = {
   undecided: 'Undecided',
 };
 
-export const ATTENDANCE_LABELS: Record<AttendanceType, string> = {
+export const ATTENDANCE_LABELS: Record<string, string> = {
   already_attended: 'Already Attended',
   planning_to_attend: 'Planning to Attend',
   supporting_online: 'Supporting Online',
+  local_protest: 'Joining Local Protest',
 };
 
 export const AGE_GROUP_LABELS: Record<AgeGroup, string> = {

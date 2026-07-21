@@ -46,6 +46,7 @@ export async function GET() {
           already_attended_count: city.already_attended_count,
           planning_count: city.planning_count,
           online_count: city.online_count,
+          local_protest_count: city.local_protest_count,
         },
         geometry: {
           type: 'Point',

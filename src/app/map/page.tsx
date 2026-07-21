@@ -26,6 +26,7 @@ interface SelectedCityInfo {
   already_attended_count?: number;
   planning_count?: number;
   online_count?: number;
+  local_protest_count?: number;
 }
 
 export default function MapPage() {
