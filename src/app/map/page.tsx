@@ -57,7 +57,7 @@ export default function MapPage() {
       {/* Heatmap Area */}
       <div className="flex-1 h-full w-full relative">
         {/* Authenticity Badge */}
-        <div className="absolute bottom-6 right-6 z-[400] pointer-events-none">
+        <div className="absolute bottom-12 right-6 z-[400] pointer-events-none">
           <div className="flex items-center gap-2 bg-background/80 backdrop-blur-md border border-primary/20 px-3 py-1.5 rounded-full shadow-lg">
             <ShieldCheck className="h-4 w-4 text-primary" />
             <span className="text-xs font-semibold text-foreground">Data strictly filtered. 100% citizen-submitted.</span>
@@ -68,9 +68,8 @@ export default function MapPage() {
 
       {/* Sidebar Panel - Desktop Layout */}
       <div
-        className={`hidden md:block h-full transition-all duration-300 ease-in-out shrink-0 border-l border-primary/10 ${
-          isSidebarOpen ? 'w-80' : 'w-0 overflow-hidden border-l-0'
-        }`}
+        className={`hidden md:block h-full transition-all duration-300 ease-in-out shrink-0 border-l border-primary/10 ${isSidebarOpen ? 'w-80' : 'w-0 overflow-hidden border-l-0'
+          }`}
       >
         <CityPanel cityData={selectedCity} onClose={handleClose} />
       </div>

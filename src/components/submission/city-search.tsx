@@ -31,7 +31,10 @@ export function CitySearch({ onSelect, selectedCity }: CitySearchProps) {
   // Sync state if selectedCity changes
   useEffect(() => {
     if (selectedCity) {
-      setQuery(`${selectedCity.city}, ${selectedCity.state}`);
+      const displayStr = selectedCity.locality
+        ? `${selectedCity.locality}, ${selectedCity.city}`
+        : `${selectedCity.city}, ${selectedCity.state}`;
+      setQuery(displayStr);
     } else {
       setQuery('');
     }
@@ -39,7 +42,12 @@ export function CitySearch({ onSelect, selectedCity }: CitySearchProps) {
 
   // Fetch search results from our API
   useEffect(() => {
-    if (query.trim().length < 2 || (selectedCity && query === `${selectedCity.city}, ${selectedCity.state}`)) {
+    // If the input matches exactly what we already selected, do not search
+    const selectedStr = selectedCity
+      ? (selectedCity.locality ? `${selectedCity.locality}, ${selectedCity.city}` : `${selectedCity.city}, ${selectedCity.state}`)
+      : null;
+
+    if (query.trim().length < 2 || (selectedStr && query === selectedStr)) {
       setResults([]);
       return;
     }
@@ -58,14 +66,15 @@ export function CitySearch({ onSelect, selectedCity }: CitySearchProps) {
       } finally {
         setLoading(false);
       }
-    }, 300);
+    }, 800); // 800ms debounce to protect Geocoding API limits
 
     return () => clearTimeout(delayDebounceFn);
   }, [query, selectedCity]);
 
   const handleSelect = (city: CitySearchResult) => {
     onSelect(city);
-    setQuery(`${city.city}, ${city.state}`);
+    const displayStr = city.locality ? `${city.locality}, ${city.city}` : `${city.city}, ${city.state}`;
+    setQuery(displayStr);
     setResults([]);
     setIsOpen(false);
   };
@@ -123,9 +132,11 @@ export function CitySearch({ onSelect, selectedCity }: CitySearchProps) {
                   >
                     <MapPin className="mr-2 h-4 w-4 text-primary shrink-0" />
                     <div>
-                      <span className="font-medium">{result.city}</span>
-                      <span className="text-xs text-muted-foreground ml-1.5">
-                        {result.state}, {result.country}
+                      <span className="font-medium">
+                        {result.locality ? `${result.locality}, ${result.city}` : result.city}
+                      </span>
+                      <span className="text-xs text-muted-foreground ml-1.5 flex block mt-0.5 opacity-80">
+                        {result.display_name || `${result.state}, ${result.country}`}
                       </span>
                     </div>
                   </button>
@@ -143,4 +154,4 @@ export function CitySearch({ onSelect, selectedCity }: CitySearchProps) {
       )}
     </div>
   );
-}
+} 

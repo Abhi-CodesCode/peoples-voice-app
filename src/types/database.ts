@@ -23,6 +23,7 @@ export type SubmissionStatus = 'pending' | 'approved' | 'hidden';
 export interface Submission {
   id: string;
   city: string;
+  locality: string | null;
   district: string | null;
   state: string;
   country: string;
@@ -43,6 +44,7 @@ export interface Submission {
 /** Aggregated voice counts per city (used by the map layer) */
 export interface CityAggregate {
   city: string;
+  locality?: string;
   state: string;
   country: string;
   lat: number;
@@ -101,6 +103,7 @@ export interface PlatformStats {
 /** Data shape submitted via the public form */
 export interface SubmissionFormData {
   city: string;
+  locality?: string;
   district: string;
   state: string;
   country: string;
@@ -115,14 +118,15 @@ export interface SubmissionFormData {
   student_field?: string;
 }
 
-/** Result returned by the city autocomplete / geocoding search */
 export interface CitySearchResult {
   city: string;
+  locality?: string;
   district?: string | null;
   state: string;
   country: string;
   latitude: number;
   longitude: number;
+  display_name?: string;
 }
 
 export interface TimelineEvent {

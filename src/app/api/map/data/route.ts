@@ -15,17 +15,22 @@ export async function GET() {
       return NextResponse.json(getMockGeoJSON());
     }
 
-    // Fetch from city_aggregates view
-    const { data, error } = await supabase
+    // Fetch locality-level aggregates (for map dots)
+    const { data: locData, error: locError } = await supabase
+      .from('location_aggregates')
+      .select('*');
+
+    // Fetch city-level aggregates (for side panel totals)
+    const { data: cityData, error: cityError } = await supabase
       .from('city_aggregates')
       .select('*');
 
-    if (error) {
-      console.error('Error fetching city aggregates:', error);
+    if (locError || cityError) {
+      console.error('Error fetching aggregates:', locError || cityError);
       return NextResponse.json(getMockGeoJSON());
     }
 
-    if (!data || data.length === 0) {
+    if (!locData || locData.length === 0 || !cityData) {
       return NextResponse.json(getMockGeoJSON());
     }
 
@@ -33,26 +38,35 @@ export async function GET() {
     const geojson = {
       type: 'FeatureCollection',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      features: data.map((city: Record<string, any>) => ({
-        type: 'Feature',
-        properties: {
-          city: city.city,
-          state: city.state,
-          country: city.country,
-          total_voices: city.total_voices,
-          supporting_count: city.supporting_count,
-          participating_count: city.participating_count,
-          undecided_count: city.undecided_count,
-          already_attended_count: city.already_attended_count,
-          planning_count: city.planning_count,
-          online_count: city.online_count,
-          local_protest_count: city.local_protest_count,
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [parseFloat(city.longitude), parseFloat(city.latitude)],
-        },
-      })),
+      features: locData.map((loc: Record<string, any>) => {
+        // Find the matching city totals
+        const cData = cityData.find(c => c.city === loc.city && c.state === loc.state) || loc;
+
+        return {
+          type: 'Feature',
+          properties: {
+            locality: loc.locality,
+            city: loc.city,
+            state: loc.state,
+            country: loc.country,
+            // The counts shown in the side panel will be the CITY TOTALS
+            total_voices: cData.total_voices,
+            supporting_count: cData.supporting_count,
+            participating_count: cData.participating_count,
+            undecided_count: cData.undecided_count,
+            already_attended_count: cData.already_attended_count,
+            planning_count: cData.planning_count,
+            online_count: cData.online_count,
+            local_protest_count: cData.local_protest_count,
+            // We also pass locality specifics just in case
+            locality_total_voices: loc.total_voices,
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(loc.longitude), parseFloat(loc.latitude)],
+          },
+        };
+      }),
     };
 
     return NextResponse.json(geojson);

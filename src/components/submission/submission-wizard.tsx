@@ -82,6 +82,7 @@ export function SubmissionWizard() {
     setFormData((prev) => ({
       ...prev,
       city: cityResult.city,
+      locality: cityResult.locality,
       state: cityResult.state,
       country: cityResult.country,
       latitude: cityResult.latitude,

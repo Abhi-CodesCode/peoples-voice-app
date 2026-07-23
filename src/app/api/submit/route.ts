@@ -87,6 +87,7 @@ export async function POST(request: Request) {
       .from('submissions')
       .insert({
         city,
+        locality: body.locality ? sanitizeText(body.locality) : null,
         district,
         state,
         country,
