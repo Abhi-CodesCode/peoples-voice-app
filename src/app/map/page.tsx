@@ -57,7 +57,7 @@ export default function MapPage() {
       {/* Heatmap Area */}
       <div className="flex-1 h-full w-full relative">
         {/* Authenticity Badge */}
-        <div className="absolute top-28 left-6 z-[400] pointer-events-none">
+        <div className="absolute bottom-6 right-6 z-[400] pointer-events-none">
           <div className="flex items-center gap-2 bg-background/80 backdrop-blur-md border border-primary/20 px-3 py-1.5 rounded-full shadow-lg">
             <ShieldCheck className="h-4 w-4 text-primary" />
             <span className="text-xs font-semibold text-foreground">Data strictly filtered. 100% citizen-submitted.</span>
