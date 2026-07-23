@@ -101,7 +101,7 @@ export function SubmissionWizard() {
       return;
     }
     if (currentStep === 6 && (!formData.age_group || !formData.occupation || formData.occupation.trim() === '')) {
-      setError('Please provide your age group and occupation to proceed. This is required to prove the authenticity of the movement.');
+      setError('Your demographic details are required. Help us prove this movement is driven by real citizens, not bots.');
       return;
     }
     setError(null);
@@ -438,9 +438,9 @@ export function SubmissionWizard() {
               {currentStep === 6 && (
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <h2 className="text-lg font-bold text-foreground">Demographics (Required)</h2>
-                    <p className="text-sm text-muted-foreground">
-                      We require this to showcase that real, diverse people are supporting the protest, proving this is a genuine movement and not propaganda.
+                    <h2 className="text-lg font-bold text-foreground">Who We Are (Required)</h2>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Online trolls and certain media outlets dismiss our voices as &quot;bots,&quot; &quot;paid actors,&quot; or &quot;propaganda.&quot; By sharing your age and occupation, you help us mathematically prove that this movement is driven by real, everyday citizens—from students to working professionals across the nation. Your data remains strictly anonymous.
                     </p>
                   </div>
                   <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2">
