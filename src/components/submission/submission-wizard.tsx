@@ -90,7 +90,7 @@ export function SubmissionWizard() {
     setError(null);
   };
 
-  const handleTextChange = (field: 'support_reason' | 'desired_outcome' | 'occupation', value: string) => {
+  const handleTextChange = (field: 'support_reason' | 'desired_outcome' | 'occupation' | 'student_field', value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -471,10 +471,34 @@ export function SubmissionWizard() {
                         id="occupation-input"
                         type="text"
                         value={formData.occupation || ''}
-                        onChange={(e) => handleTextChange('occupation', e.target.value.slice(0, MAX_OCCUPATION_LENGTH))}
+                        onChange={(e) => {
+                          const val = e.target.value.slice(0, MAX_OCCUPATION_LENGTH);
+                          handleTextChange('occupation', val);
+                          // Clear student field if they change away from student
+                          if (!val.toLowerCase().includes('student')) {
+                            handleTextChange('student_field', '');
+                          }
+                        }}
                         placeholder="e.g. Student, IT, Farmer, Healthcare"
                       />
                     </div>
+                    
+                    {formData.occupation?.toLowerCase().includes('student') && (
+                      <motion.div 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="space-y-1.5 sm:col-span-2"
+                      >
+                        <Label htmlFor="student-field-input">Field of Study (Optional)</Label>
+                        <Input
+                          id="student-field-input"
+                          type="text"
+                          value={formData.student_field || ''}
+                          onChange={(e) => handleTextChange('student_field', e.target.value.slice(0, 100))}
+                          placeholder="e.g. Engineering, Arts, Law..."
+                        />
+                      </motion.div>
+                    )}
                   </div>
                 </div>
               )}

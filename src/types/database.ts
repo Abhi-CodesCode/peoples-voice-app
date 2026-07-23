@@ -34,6 +34,7 @@ export interface Submission {
   desired_outcome: string | null;
   age_group: AgeGroup | null;
   occupation: string | null;
+  student_field: string | null;
   status: SubmissionStatus;
   created_at: string;
   submission_hash: string;
@@ -83,6 +84,7 @@ export interface PublicVoice {
   participation_status: ParticipationStatus;
   support_reason: string | null;
   desired_outcome: string | null;
+  student_field: string | null;
   created_at: string;
 }
 
@@ -110,6 +112,7 @@ export interface SubmissionFormData {
   desired_outcome?: string;
   age_group?: AgeGroup;
   occupation?: string;
+  student_field?: string;
 }
 
 /** Result returned by the city autocomplete / geocoding search */

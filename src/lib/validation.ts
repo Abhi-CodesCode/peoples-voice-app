@@ -110,5 +110,12 @@ export function validateSubmission(
     errors.push('Occupation is required.');
   }
 
+  if (
+    data.student_field &&
+    data.student_field.length > 100
+  ) {
+    errors.push('Field of study must be 100 characters or fewer.');
+  }
+
   return { valid: errors.length === 0, errors };
 }

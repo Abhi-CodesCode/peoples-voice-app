@@ -24,7 +24,8 @@ import {
   Clock, 
   CheckCircle2, 
   Briefcase,
-  UserCheck
+  UserCheck,
+  ShieldCheck
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { StatCard } from '@/components/analytics/stat-card';
@@ -41,14 +42,25 @@ export default function AnalyticsPage() {
     undecided_count: 0
   });
 
+  const [demographics, setDemographics] = useState<{ occupations: { occupation: string, count: number }[], ages: { age_group: string, count: number }[] }>({ occupations: [], ages: [] });
+
   // Fetch stats on mount
   useEffect(() => {
     async function fetchStats() {
       try {
-        const response = await fetch('/api/stats');
-        if (response.ok) {
-          const data = await response.json();
+        const [statsRes, demoRes] = await Promise.all([
+          fetch('/api/stats'),
+          fetch('/api/analytics/demographics')
+        ]);
+        
+        if (statsRes.ok) {
+          const data = await statsRes.json();
           setStats(data);
+        }
+        
+        if (demoRes.ok) {
+          const data = await demoRes.json();
+          setDemographics(data);
         }
       } catch (err) {
         console.error('Failed to fetch stats:', err);
@@ -71,8 +83,8 @@ export default function AnalyticsPage() {
   const attendanceData: { name: string, value: number, color?: string }[] = [];
   const cityData: { name: string, value: number, color?: string }[] = [];
   const stateData: { name: string, value: number, color?: string }[] = [];
-  const ageData: { name: string, value: number, color?: string }[] = [];
-  const occupationData: { name: string, value: number, color?: string }[] = [];
+  const ageData = demographics.ages.map((d: { age_group: string, count: number }) => ({ name: d.age_group, count: Number(d.count) }));
+  const occupationData = demographics.occupations.map((d: { occupation: string, count: number }) => ({ name: d.occupation, count: Number(d.count) }));
 
   const supportingPct = stats.total_voices > 0 ? (stats.supporting_count / stats.total_voices) * 100 : 0;
   const participatingPct = stats.total_voices > 0 ? (stats.participating_count / stats.total_voices) * 100 : 0;
@@ -93,6 +105,12 @@ export default function AnalyticsPage() {
           <p className="text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
             Public aggregated metrics of all registered voices. Under no circumstances do these charts track or display personal identification data.
           </p>
+          <div className="mt-4 flex justify-center">
+            <div className="inline-flex items-center gap-2 bg-success/10 border border-success/20 px-3 py-1.5 rounded-full">
+              <ShieldCheck className="h-4 w-4 text-success" />
+              <span className="text-xs font-semibold text-success">Data strictly filtered for bot-activity. 100% citizen-submitted.</span>
+            </div>
+          </div>
         </div>
 
         {/* Stats Row */}

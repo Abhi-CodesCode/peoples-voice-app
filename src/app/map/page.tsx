@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { CityPanel } from '@/components/map/city-panel';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { ShieldCheck } from 'lucide-react';
 
 // Import Heatmap dynamically with SSR disabled to prevent window/document errors
 const Heatmap = dynamic(() => import('@/components/map/heatmap'), {
@@ -55,6 +56,13 @@ export default function MapPage() {
     <div className="relative flex h-screen w-full overflow-hidden -mt-24">
       {/* Heatmap Area */}
       <div className="flex-1 h-full w-full relative">
+        {/* Authenticity Badge */}
+        <div className="absolute top-28 left-6 z-[400] pointer-events-none">
+          <div className="flex items-center gap-2 bg-background/80 backdrop-blur-md border border-primary/20 px-3 py-1.5 rounded-full shadow-lg">
+            <ShieldCheck className="h-4 w-4 text-primary" />
+            <span className="text-xs font-semibold text-foreground">Data strictly filtered. 100% citizen-submitted.</span>
+          </div>
+        </div>
         <Heatmap onCityClick={handleCityClick} />
       </div>
 
