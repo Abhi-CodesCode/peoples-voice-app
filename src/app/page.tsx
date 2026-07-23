@@ -345,15 +345,7 @@ export default function HomePage() {
                     )}
                   </div>
 
-                  {/* The connector dot (exactly centered on lg) */}
-                  <div
-                    className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background shadow shrink-0 absolute left-0 lg:left-1/2 lg:-translate-x-1/2 z-10"
-                    style={{ backgroundColor: event.color.startsWith('#') ? event.color : 'transparent' }}
-                  >
-                    {!event.color.startsWith('#') && (
-                      <div className={`w-full h-full rounded-full bg-${event.color}`} />
-                    )}
-                  </div>
+                  {/* The connector dot was removed per user request */}
 
                   {/* The text content side */}
                   {/* On small screens: text is always on the right of the line (pl-12). */}
