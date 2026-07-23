@@ -124,3 +124,15 @@ export interface CitySearchResult {
   latitude: number;
   longitude: number;
 }
+
+export interface TimelineEvent {
+  id: string;
+  stage_name: string;
+  title: string;
+  date_range: string;
+  description: string;
+  color: string;
+  image_url: string | null;
+  order_index: number;
+  created_at: string;
+}

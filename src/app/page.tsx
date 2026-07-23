@@ -49,12 +49,16 @@ function AnimatedCounter({
 /* ────────────────────────────────────────────────────────────
    Landing Page
    ──────────────────────────────────────────────────────────── */
+import { createClient } from '@/lib/supabase/client';
+import { TimelineEvent } from '@/types/database';
+
 export default function HomePage() {
   const [stats, setStats] = useState({
     total_voices: 0,
     cities_represented: 0,
     states_represented: 0,
   });
+  const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
 
   useEffect(() => {
     async function fetchStats() {
@@ -68,7 +72,25 @@ export default function HomePage() {
         console.error('Failed to fetch stats:', error);
       }
     }
+    
+    async function fetchTimeline() {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from('timeline_events')
+          .select('*')
+          .order('order_index', { ascending: true });
+        
+        if (!error && data) {
+          setTimelineEvents(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch timeline:', error);
+      }
+    }
+
     fetchStats();
+    fetchTimeline();
   }, []);
 
   const recentVoices: { message: string; city: string; state: string }[] = [];
@@ -303,92 +325,50 @@ export default function HomePage() {
           </div>
 
           <div className="space-y-16 lg:space-y-32 relative before:absolute before:inset-0 before:ml-5 lg:before:mx-auto before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
-            
-            {/* Stage 1 */}
-            <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-              <div className="hidden lg:flex flex-1 w-[calc(50%-2.5rem)] items-center justify-end group-odd:justify-start">
-                <div className="relative w-full aspect-video border border-border bg-surface overflow-hidden">
-                   <div className="absolute inset-0 flex items-center justify-center bg-muted/20 text-muted-foreground uppercase text-xs tracking-widest">Image Placeholder</div>
+            {timelineEvents.map((event) => {
+              // We can determine left/right layout by index (even/odd) but the CSS handles this automatically with group-even/group-odd!
+              return (
+                <div key={event.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                  <div className="hidden lg:flex flex-1 w-[calc(50%-2.5rem)] items-center justify-end group-odd:justify-start">
+                    {event.image_url ? (
+                      <div className="relative w-full aspect-video border border-border bg-surface overflow-hidden">
+                        <Image src={event.image_url} alt={event.title} fill className="object-cover opacity-80" />
+                      </div>
+                    ) : (
+                      <div className="relative w-full aspect-video border border-border bg-surface overflow-hidden">
+                         <div className="absolute inset-0 flex items-center justify-center bg-muted/20 text-muted-foreground uppercase text-xs tracking-widest">Image Placeholder</div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* The connector dot */}
+                  <div 
+                    className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 absolute left-0 lg:left-1/2 z-10" 
+                    style={{ backgroundColor: event.color.startsWith('#') ? event.color : 'transparent' }}
+                  >
+                    {!event.color.startsWith('#') && (
+                      <div className={`w-full h-full rounded-full bg-${event.color}`} />
+                    )}
+                  </div>
+                  
+                  {/* The text content */}
+                  <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] pl-8 lg:pl-0 lg:px-12 group-even:text-left group-odd:lg:text-right">
+                    <p 
+                      className="text-xs font-bold uppercase tracking-widest mb-2"
+                      style={{ color: event.color.startsWith('#') ? event.color : undefined }}
+                    >
+                      <span className={!event.color.startsWith('#') ? `text-${event.color}` : ''}>
+                        {event.stage_name}: {event.date_range}
+                      </span>
+                    </p>
+                    <h4 className="text-2xl font-light text-foreground mb-4">{event.title}</h4>
+                    <p className="text-base font-light text-muted-foreground leading-relaxed">
+                      {event.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-[#FF9933] shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 absolute left-0 lg:left-1/2 z-10" />
-              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] pl-8 lg:pl-0 lg:px-12 group-even:text-left group-odd:lg:text-right">
-                <p className="text-xs font-bold uppercase tracking-widest text-[#FF9933] mb-2">Stage 1: May – Early June 2026</p>
-                <h4 className="text-2xl font-light text-foreground mb-4">The Digital Spark & Movement Genesis</h4>
-                <p className="text-base font-light text-muted-foreground leading-relaxed">
-                  Triggered by controversial institutional remarks comparing unemployed youth to &quot;parasites and cockroaches,&quot; digital strategist Abhijeet Dipke founds the satirical Cockroach Janta Party (CJP). What starts as an online reaction virally mobilizes millions of Gen-Z and millennial students over systemic exam leaks (NEET-UG, CBSE), culminating in the movement&apos;s first major physical sit-in at Jantar Mantar on June 6, 2026.
-                </p>
-              </div>
-            </div>
-
-            {/* Stage 2 */}
-            <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-              <div className="hidden lg:flex flex-1 w-[calc(50%-2.5rem)] items-center justify-end group-odd:justify-start">
-                <div className="relative w-full aspect-video border border-border bg-surface overflow-hidden">
-                   <div className="absolute inset-0 flex items-center justify-center bg-muted/20 text-muted-foreground uppercase text-xs tracking-widest">Image Placeholder</div>
-                </div>
-              </div>
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-foreground/50 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 absolute left-0 lg:left-1/2 z-10" />
-              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] pl-8 lg:pl-0 lg:px-12 group-even:text-left group-odd:lg:text-right">
-                <p className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-2">Stage 2: Late June – Mid July 2026</p>
-                <h4 className="text-2xl font-light text-foreground mb-4">Moral Escalation & The Hunger Strike</h4>
-                <p className="text-base font-light text-muted-foreground leading-relaxed">
-                  The protest gains deep national moral weight on June 28, 2026, when prominent environmentalist and education activist Sonam Wangchuk joins the Jantar Mantar camp, launching an indefinite hunger strike. His fast galvanizes widespread public support and solidarity from across the country, turning the site into a major focal point for systemic education reform.
-                </p>
-              </div>
-            </div>
-
-            {/* Stage 3 */}
-            <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-              <div className="hidden lg:flex flex-1 w-[calc(50%-2.5rem)] items-center justify-end group-odd:justify-start">
-                <div className="relative w-full aspect-video border border-border bg-surface overflow-hidden">
-                   <div className="absolute inset-0 flex items-center justify-center bg-muted/20 text-muted-foreground uppercase text-xs tracking-widest">Image Placeholder</div>
-                </div>
-              </div>
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-foreground/50 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 absolute left-0 lg:left-1/2 z-10" />
-              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] pl-8 lg:pl-0 lg:px-12 group-even:text-left group-odd:lg:text-right">
-                <p className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-2">Stage 3: July 18, 2026</p>
-                <h4 className="text-2xl font-light text-foreground mb-4">The Hospitalization & Breaking Point</h4>
-                <p className="text-base font-light text-muted-foreground leading-relaxed">
-                  On the 21st day of his historic fast, amidst severely deteriorating health, security forces abruptly dismantle parts of the site and forcefully remove Sonam Wangchuk to a hospital. This aggressive state intervention sparks immediate national outrage, swelling the ranks of protesters gathering in the capital.
-                </p>
-              </div>
-            </div>
-
-            {/* Stage 4 */}
-            <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-              <div className="hidden lg:flex flex-1 w-[calc(50%-2.5rem)] items-center justify-end group-odd:justify-start">
-                <div className="relative w-full aspect-video border border-border bg-surface overflow-hidden">
-                   <div className="absolute inset-0 flex items-center justify-center bg-muted/20 text-muted-foreground uppercase text-xs tracking-widest">Image Placeholder</div>
-                </div>
-              </div>
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-destructive shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 absolute left-0 lg:left-1/2 z-10" />
-              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] pl-8 lg:pl-0 lg:px-12 group-even:text-left group-odd:lg:text-right">
-                <p className="text-xs font-bold uppercase tracking-widest text-destructive mb-2">Stage 4: July 20, 2026</p>
-                <h4 className="text-2xl font-light text-foreground mb-4">&quot;Chalo Sansad&quot; & The State Crackdown</h4>
-                <p className="text-base font-light text-muted-foreground leading-relaxed">
-                  On the opening day of Parliament&apos;s Monsoon Session, tens of thousands of students and citizens attempt a peaceful &quot;Chalo Sansad&quot; march. They meet heavy barricades, tear gas, and a severe baton charge by security forces. The resulting clashes leave over 180 injured—including both protesters and police—with widespread documentation of excessive force, broken limbs, and mass detentions.
-                </p>
-              </div>
-            </div>
-
-            {/* Stage 5 */}
-            <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-              <div className="hidden lg:flex flex-1 w-[calc(50%-2.5rem)] items-center justify-end group-odd:justify-start">
-                <div className="relative w-full aspect-video border border-border bg-surface overflow-hidden">
-                   <div className="absolute inset-0 flex items-center justify-center bg-muted/20 text-muted-foreground uppercase text-xs tracking-widest">Image Placeholder</div>
-                </div>
-              </div>
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-[#138808] shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 absolute left-0 lg:left-1/2 z-10" />
-              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] pl-8 lg:pl-0 lg:px-12 group-even:text-left group-odd:lg:text-right">
-                <p className="text-xs font-bold uppercase tracking-widest text-[#138808] mb-2">Stage 5: Late July 2026 – Present</p>
-                <h4 className="text-2xl font-light text-foreground mb-4">Unbroken Resistance & Institutional Fallout</h4>
-                <p className="text-base font-light text-muted-foreground leading-relaxed">
-                  Despite communication shutdowns, metro station closures, and the destruction of infrastructure, protesters return under the night sky to hold the ground. As opposition leaders face detentions and the government announces fast-track courts for exam leaks, the CJP maintains its defiant stance, refusing any dialogue until Union Education Minister Dharmendra Pradhan steps down and deep structural reforms are guaranteed.
-                </p>
-              </div>
-            </div>
-
+              );
+            })}
           </div>
         </div>
       </section>

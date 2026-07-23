@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { formatDistanceToNow } from 'date-fns';
 
+import { TimelineCMS } from '@/components/admin/timeline-cms';
 import { User } from '@supabase/supabase-js';
 import { Submission, SubmissionStatus } from '@/types/database';
 
@@ -78,6 +79,13 @@ export default function AdminDashboardPage() {
         const supabase = createClient();
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         if (sessionError || !session) {
+          router.push('/admin/login');
+          return;
+        }
+
+        if (session.user.email !== 'abhi.codescode@gmail.com') {
+          console.warn('Unauthorized user attempted to access admin page.');
+          await supabase.auth.signOut();
           router.push('/admin/login');
           return;
         }
@@ -206,9 +214,20 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Main Tabs content */}
-      <Tabs defaultValue="pending" className="w-full space-y-6">
-        <TabsList className="grid w-full grid-cols-3 max-w-md bg-surface border border-primary/5">
+      {/* Main Navigation Tabs */}
+      <Tabs defaultValue="submissions" className="w-full space-y-8">
+        <TabsList className="grid w-full grid-cols-2 max-w-sm bg-surface border border-primary/5">
+          <TabsTrigger value="submissions">Submissions</TabsTrigger>
+          <TabsTrigger value="timeline">Timeline CMS</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="timeline" className="mt-6">
+          <TimelineCMS />
+        </TabsContent>
+
+        <TabsContent value="submissions" className="space-y-6">
+          <Tabs defaultValue="pending" className="w-full space-y-6">
+            <TabsList className="grid w-full grid-cols-3 max-w-md bg-surface border border-primary/5">
           <TabsTrigger value="pending" className="flex items-center gap-1.5">
             Pending
             <Badge variant="outline" className="ml-1 bg-primary/10 border-primary/20 text-primary px-1.5 py-0">
@@ -365,6 +384,8 @@ export default function AdminDashboardPage() {
               ))}
             </div>
           )}
+        </TabsContent>
+          </Tabs>
         </TabsContent>
       </Tabs>
     </div>

@@ -168,8 +168,8 @@ export function SubmissionWizard() {
           Thank you for sharing your voice anonymously. Your perspective helps document the voluntary support for the movement.
         </p>
         <div className="flex justify-center gap-4">
-          <Button onClick={() => router.push('/map')} className="bg-primary hover:bg-primary/90 text-white">
-            View Heatmap
+          <Button onClick={() => router.push('/map')} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            View Live Heatmap
           </Button>
           <Button variant="outline" onClick={() => router.push('/voices')}>
             Read Voices

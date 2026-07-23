@@ -44,6 +44,12 @@ export default function AdminLoginPage() {
       return;
     }
 
+    if (email.toLowerCase() !== 'abhi.codescode@gmail.com') {
+      setError('Unauthorized access. Only the designated administrator can login.');
+      setLoading(false);
+      return;
+    }
+
     if (devMode) {
       // Dev mode bypass
       localStorage.setItem('peoples-voices-mock-admin', 'true');
@@ -140,7 +146,7 @@ export default function AdminLoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary hover:bg-primary/95 text-white flex items-center justify-center gap-2"
+              className="w-full bg-primary hover:bg-primary/95 text-primary-foreground flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
