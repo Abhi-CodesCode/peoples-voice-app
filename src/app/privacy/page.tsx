@@ -97,7 +97,7 @@ export default function PrivacyPage() {
                 <strong>Alignment Metric:</strong> Your declared status (Supporting, Participating, Undecided).
               </li>
               <li>
-                <strong>Optional Demographics:</strong> General age group and occupation if you choose to enter them.
+                <strong>Demographics:</strong> General age group and occupation to demonstrate the diversity of our movement.
               </li>
             </ul>
           </section>

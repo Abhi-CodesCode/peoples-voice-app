@@ -100,6 +100,10 @@ export function SubmissionWizard() {
       setError('Please search and select your city first.');
       return;
     }
+    if (currentStep === 6 && (!formData.age_group || !formData.occupation || formData.occupation.trim() === '')) {
+      setError('Please provide your age group and occupation to proceed. This is required to prove the authenticity of the movement.');
+      return;
+    }
     setError(null);
     setCurrentStep((prev) => Math.min(prev + 1, STEPS.length));
   };
@@ -430,13 +434,13 @@ export function SubmissionWizard() {
                 </div>
               )}
 
-              {/* STEP 6: Optional Details */}
+              {/* STEP 6: Demographics */}
               {currentStep === 6 && (
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <h2 className="text-lg font-bold text-foreground">Demographics (Optional)</h2>
+                    <h2 className="text-lg font-bold text-foreground">Demographics (Required)</h2>
                     <p className="text-sm text-muted-foreground">
-                      Providing this helps organizers analyze aggregate support trends.
+                      We require this to showcase that real, diverse people are supporting the protest, proving this is a genuine movement and not propaganda.
                     </p>
                   </div>
                   <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2">

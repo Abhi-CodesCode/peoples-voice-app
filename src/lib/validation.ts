@@ -100,10 +100,14 @@ export function validateSubmission(
   }
 
   if (
-    data.age_group !== undefined &&
+    !data.age_group ||
     !VALID_AGE_GROUPS.includes(data.age_group)
   ) {
-    errors.push('Invalid age group.');
+    errors.push('Age group is required.');
+  }
+
+  if (!data.occupation || data.occupation.trim().length === 0) {
+    errors.push('Occupation is required.');
   }
 
   return { valid: errors.length === 0, errors };
