@@ -6,6 +6,10 @@ import { motion, useInView } from 'framer-motion';
 import {
   MapPin,
   ExternalLink,
+  Siren,
+  Landmark,
+  Scale,
+  Newspaper,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -373,6 +377,110 @@ export default function HomePage() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ── Summary Section ── */}
+      <section className="bg-destructive/5 py-24 border-y border-destructive/20 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full bg-destructive/5 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="page-container relative z-10">
+          <div className="mb-16 text-center">
+            <p className="text-xs font-bold uppercase tracking-widest text-destructive mb-3">Summary</p>
+            <h2 className="text-3xl md:text-5xl font-light uppercase text-foreground leading-tight tracking-wide mb-6">
+              The System Against the Students
+            </h2>
+            <p className="text-base md:text-lg font-light text-muted-foreground tracking-wider max-w-3xl mx-auto leading-relaxed">
+              Despite the peaceful nature of the protest, all four pillars of democracy have failed India’s students.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto mb-16">
+            
+            {/* Pillar 1 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-surface/60 border border-border/50 p-8 flex flex-col gap-4 relative overflow-hidden group"
+            >
+              <div className="absolute top-0 left-0 w-1 h-full bg-destructive transition-all duration-300 group-hover:w-full group-hover:opacity-5" />
+              <div className="flex items-center gap-3 text-destructive mb-2">
+                <Siren className="w-6 h-6" />
+                <h3 className="text-xl font-medium tracking-wide">Executive & Police</h3>
+              </div>
+              <p className="text-sm md:text-base font-light text-muted-foreground leading-relaxed">
+                Instead of solving paper leaks and addressing student suicides, they have unleashed brutal force. Allegations include use of nail-spiked batons, electric shocks, pellet guns, expired tear gas bombs, and double-blast bombs. False narratives painting students as terrorists or goons are being spread, with claims of planted elements to discredit the movement.
+              </p>
+            </motion.div>
+
+            {/* Pillar 2 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-surface/60 border border-border/50 p-8 flex flex-col gap-4 relative overflow-hidden group"
+            >
+              <div className="absolute top-0 left-0 w-1 h-full bg-primary transition-all duration-300 group-hover:w-full group-hover:opacity-5" />
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <Landmark className="w-6 h-6" />
+                <h3 className="text-xl font-medium tracking-wide">Legislature</h3>
+              </div>
+              <p className="text-sm md:text-base font-light text-muted-foreground leading-relaxed">
+                Parliament is busy with everything except student demands. Voices speaking for students are silenced or ignored. The elected representatives have largely turned a blind eye to the ongoing crisis on the streets.
+              </p>
+            </motion.div>
+
+            {/* Pillar 3 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-surface/60 border border-border/50 p-8 flex flex-col gap-4 relative overflow-hidden group"
+            >
+              <div className="absolute top-0 left-0 w-1 h-full bg-primary transition-all duration-300 group-hover:w-full group-hover:opacity-5" />
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <Scale className="w-6 h-6" />
+                <h3 className="text-xl font-medium tracking-wide">Judiciary</h3>
+              </div>
+              <p className="text-sm md:text-base font-light text-muted-foreground leading-relaxed">
+                The Supreme Court has shown reluctance. In cases highlighting police atrocities, the court reportedly said they “don’t have time to see the videos” and has not given urgent hearings to student pleas for fundamental rights.
+              </p>
+            </motion.div>
+
+            {/* Pillar 4 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="bg-surface/60 border border-border/50 p-8 flex flex-col gap-4 relative overflow-hidden group"
+            >
+              <div className="absolute top-0 left-0 w-1 h-full bg-primary transition-all duration-300 group-hover:w-full group-hover:opacity-5" />
+              <div className="flex items-center gap-3 text-primary mb-2">
+                <Newspaper className="w-6 h-6" />
+                <h3 className="text-xl font-medium tracking-wide">Media</h3>
+              </div>
+              <p className="text-sm md:text-base font-light text-muted-foreground leading-relaxed">
+                Most national media either ignores police excesses or actively frames innocent students as violent troublemakers, while intentionally downplaying the real root issues of the nationwide exam scams and tragic suicides.
+              </p>
+            </motion.div>
+
+          </div>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto text-center p-8 md:p-12 border border-border bg-surface shadow-xl"
+          >
+            <p className="text-lg md:text-2xl font-light text-foreground leading-relaxed tracking-wide">
+              &ldquo;Students are not anti-national — they are merely demanding accountability for the deaths of their friends and genuine reforms so no more futures are ruined. <span className="font-semibold text-destructive">The fight continues.</span>&rdquo;
+            </p>
+          </motion.div>
         </div>
       </section>
 
