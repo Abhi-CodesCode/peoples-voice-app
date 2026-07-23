@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Plus, Edit2, Trash2, Save } from 'lucide-react';
+import { Loader2, Plus, Edit2, Trash2, Save, Upload } from 'lucide-react';
 
 export function TimelineCMS() {
   const [events, setEvents] = useState<TimelineEvent[]>([]);
@@ -17,6 +17,7 @@ export function TimelineCMS() {
   
   // Form State
   const [formData, setFormData] = useState<Partial<TimelineEvent>>({});
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     loadEvents();
@@ -60,6 +61,36 @@ export function TimelineCMS() {
       color: '#FF9933',
       order_index: newOrder,
     });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    setError(null);
+    try {
+      const supabase = createClient();
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('timeline_images')
+        .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+        .from('timeline_images')
+        .getPublicUrl(fileName);
+
+      setFormData(prev => ({ ...prev, image_url: publicUrlData.publicUrl }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to upload image.');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleSave = async () => {
@@ -152,6 +183,28 @@ export function TimelineCMS() {
               <div className="space-y-2">
                 <Label>Color (hex or tailwind class)</Label>
                 <Input value={formData.color || ''} onChange={e => setFormData({ ...formData, color: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label>Image (Optional)</Label>
+                <div className="flex items-center gap-2">
+                  <Input 
+                    value={formData.image_url || ''} 
+                    onChange={e => setFormData({ ...formData, image_url: e.target.value })} 
+                    placeholder="https://..." 
+                  />
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                    />
+                    <Button type="button" variant="outline" size="icon" disabled={uploadingImage} className="shrink-0">
+                      {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                </div>
               </div>
               <div className="space-y-2 col-span-2">
                 <Label>Description</Label>

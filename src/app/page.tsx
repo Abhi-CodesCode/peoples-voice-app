@@ -76,7 +76,7 @@ export default function HomePage() {
         console.error('Failed to fetch stats:', error);
       }
     }
-    
+
     async function fetchTimeline() {
       try {
         const supabase = createClient();
@@ -84,7 +84,7 @@ export default function HomePage() {
           .from('timeline_events')
           .select('*')
           .order('order_index', { ascending: true });
-        
+
         if (!error && data) {
           setTimelineEvents(data);
         }
@@ -154,16 +154,16 @@ export default function HomePage() {
             {/* Waving Flag */}
             <div className="flex justify-start md:justify-end mb-6 md:pr-2">
               <div className="relative w-32 h-24 sm:w-40 sm:h-28 md:w-80 md:h-80">
-                <Image 
-                  src="/rebellion_flag.png" 
-                  alt="Rebellion Flag" 
-                  fill 
-                  className="object-contain drop-shadow-2xl" 
-                  style={{ 
-                    maskImage: 'radial-gradient(circle, black 40%, transparent 75%)', 
-                    WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 75%)' 
+                <Image
+                  src="/rebellion_flag.png"
+                  alt="Rebellion Flag"
+                  fill
+                  className="object-contain drop-shadow-2xl"
+                  style={{
+                    maskImage: 'radial-gradient(circle, black 40%, transparent 75%)',
+                    WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 75%)'
                   }}
-                  priority 
+                  priority
                 />
               </div>
             </div>
@@ -340,27 +340,27 @@ export default function HomePage() {
                       </div>
                     ) : (
                       <div className="relative w-full aspect-video border border-border bg-surface overflow-hidden">
-                         <div className="absolute inset-0 flex items-center justify-center bg-muted/20 text-muted-foreground uppercase text-xs tracking-widest">Image Placeholder</div>
+                        <div className="absolute inset-0 flex items-center justify-center bg-muted/20 text-muted-foreground uppercase text-xs tracking-widest">Image Placeholder</div>
                       </div>
                     )}
                   </div>
-                  
+
                   {/* The connector dot (exactly centered on lg) */}
-                  <div 
-                    className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background shadow shrink-0 absolute left-0 lg:left-1/2 lg:-translate-x-1/2 z-10" 
+                  <div
+                    className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background shadow shrink-0 absolute left-0 lg:left-1/2 lg:-translate-x-1/2 z-10"
                     style={{ backgroundColor: event.color.startsWith('#') ? event.color : 'transparent' }}
                   >
                     {!event.color.startsWith('#') && (
                       <div className={`w-full h-full rounded-full bg-${event.color}`} />
                     )}
                   </div>
-                  
+
                   {/* The text content side */}
                   {/* On small screens: text is always on the right of the line (pl-12). */}
                   {/* On lg screens (even): text is on the right, needs pl-12, text-left. */}
                   {/* On lg screens (odd): text is on the left, needs pr-12, text-right, and remove pl. */}
                   <div className="w-[calc(100%-3rem)] ml-12 lg:ml-0 lg:w-[calc(50%-2.5rem)] lg:group-even:pl-12 lg:group-even:text-left lg:group-odd:pr-12 lg:group-odd:text-right">
-                    <p 
+                    <p
                       className="text-xs font-bold uppercase tracking-widest mb-2"
                       style={{ color: event.color.startsWith('#') ? event.color : undefined }}
                     >
@@ -384,7 +384,7 @@ export default function HomePage() {
       <section className="bg-destructive/5 py-24 border-y border-destructive/20 relative overflow-hidden">
         {/* Subtle background glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full bg-destructive/5 blur-[120px] rounded-full pointer-events-none" />
-        
+
         <div className="page-container relative z-10">
           <div className="mb-16 text-center">
             <p className="text-xs font-bold uppercase tracking-widest text-destructive mb-3">Summary</p>
@@ -397,9 +397,9 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto mb-16">
-            
+
             {/* Pillar 1 */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -416,7 +416,7 @@ export default function HomePage() {
             </motion.div>
 
             {/* Pillar 2 */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -434,7 +434,7 @@ export default function HomePage() {
             </motion.div>
 
             {/* Pillar 3 */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -452,7 +452,7 @@ export default function HomePage() {
             </motion.div>
 
             {/* Pillar 4 */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -471,7 +471,7 @@ export default function HomePage() {
 
           </div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -506,7 +506,7 @@ export default function HomePage() {
               "/images/cjp9.avif",
               "/images/collage1.png",
               "/images/mask.avif",
-              "/protest_bg.png"
+              "/protest_image.avif"
             ].map((src, i) => (
               <motion.div
                 key={i}
