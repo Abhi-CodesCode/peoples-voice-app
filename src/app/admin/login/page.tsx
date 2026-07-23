@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Shield, Mail, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Shield, Mail, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,9 +12,9 @@ import { createClient } from '@/lib/supabase/client';
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [devMode, setDevMode] = useState(false);
 
   // Check session on mount
@@ -36,7 +36,6 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSuccess(false);
 
     if (!email) {
       setError('Please enter a valid email address.');
@@ -59,17 +58,17 @@ export default function AdminLoginPage() {
 
     try {
       const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithOtp({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/admin`
-        }
+        password,
       });
 
       if (signInError) throw signInError;
-      setSuccess(true);
+      
+      // Successfully logged in
+      router.push('/admin');
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to send magic link. Please check your credentials.';
+      const errorMsg = err instanceof Error ? err.message : 'Invalid credentials. Please try again.';
       setError(errorMsg);
     } finally {
       setLoading(false);
@@ -95,7 +94,7 @@ export default function AdminLoginPage() {
           </div>
           <CardTitle className="text-2xl font-bold tracking-tight text-foreground">Admin Portal</CardTitle>
           <CardDescription className="text-xs text-muted-foreground">
-            Enter your admin email. We will send you a passwordless magic link.
+            Enter your admin credentials to securely access the dashboard.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -106,12 +105,7 @@ export default function AdminLoginPage() {
             </div>
           )}
 
-          {success && (
-            <div className="flex items-start gap-2.5 rounded-lg border border-success/20 bg-success/10 p-3.5 text-xs text-success">
-              <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-              <span>Magic link sent! Check your email inbox to complete login.</span>
-            </div>
-          )}
+          {/* Success message removed since we redirect immediately on password login */}
 
           {devMode && (
             <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-3 text-xs text-yellow-500/90 leading-relaxed space-y-2">
@@ -143,6 +137,24 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
+            <div className="space-y-1.5">
+              <Label htmlFor="admin-password">Password</Label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-3 flex items-center text-muted-foreground">
+                  <Shield className="h-4 w-4" />
+                </span>
+                <Input
+                  id="admin-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+
             <Button
               type="submit"
               disabled={loading}
@@ -151,10 +163,10 @@ export default function AdminLoginPage() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Sending Link...
+                  Authenticating...
                 </>
               ) : (
-                'Send Magic Link'
+                'Secure Login'
               )}
             </Button>
           </form>

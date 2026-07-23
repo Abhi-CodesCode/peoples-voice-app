@@ -324,11 +324,11 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="space-y-16 lg:space-y-32 relative before:absolute before:inset-0 before:ml-5 lg:before:mx-auto before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
+          <div className="space-y-16 lg:space-y-32 relative before:absolute before:inset-0 before:ml-5 lg:before:left-1/2 lg:before:-translate-x-1/2 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
             {timelineEvents.map((event) => {
-              // We can determine left/right layout by index (even/odd) but the CSS handles this automatically with group-even/group-odd!
               return (
-                <div key={event.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                <div key={event.id} className="relative flex items-center justify-between lg:justify-normal lg:odd:flex-row-reverse group is-active">
+                  {/* Image side */}
                   <div className="hidden lg:flex flex-1 w-[calc(50%-2.5rem)] items-center justify-end group-odd:justify-start">
                     {event.image_url ? (
                       <div className="relative w-full aspect-video border border-border bg-surface overflow-hidden">
@@ -341,9 +341,9 @@ export default function HomePage() {
                     )}
                   </div>
                   
-                  {/* The connector dot */}
+                  {/* The connector dot (exactly centered on lg) */}
                   <div 
-                    className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 absolute left-0 lg:left-1/2 z-10" 
+                    className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background shadow shrink-0 absolute left-0 lg:left-1/2 lg:-translate-x-1/2 z-10" 
                     style={{ backgroundColor: event.color.startsWith('#') ? event.color : 'transparent' }}
                   >
                     {!event.color.startsWith('#') && (
@@ -351,8 +351,11 @@ export default function HomePage() {
                     )}
                   </div>
                   
-                  {/* The text content */}
-                  <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] pl-8 lg:pl-0 lg:px-12 group-even:text-left group-odd:lg:text-right">
+                  {/* The text content side */}
+                  {/* On small screens: text is always on the right of the line (pl-12). */}
+                  {/* On lg screens (even): text is on the right, needs pl-12, text-left. */}
+                  {/* On lg screens (odd): text is on the left, needs pr-12, text-right, and remove pl. */}
+                  <div className="w-[calc(100%-3rem)] ml-12 lg:ml-0 lg:w-[calc(50%-2.5rem)] lg:group-even:pl-12 lg:group-even:text-left lg:group-odd:pr-12 lg:group-odd:text-right">
                     <p 
                       className="text-xs font-bold uppercase tracking-widest mb-2"
                       style={{ color: event.color.startsWith('#') ? event.color : undefined }}
